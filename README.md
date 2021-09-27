@@ -10,6 +10,5 @@ The output of the application must be:
 
 ## How to run:
  - Git clone https://github.com/Taras-777/Algo.git
- - In console `python heap_sort.py`
  - Enter array e.g. `16,1,178,5`
  - Enter order e.g. `asc` or `desc`
