@@ -1,30 +1,26 @@
 import unittest
-from heapsort import HeapSort
+from main import QueueWithPriority
 
 
-class TestHeapSort(unittest.TestCase):
+class TestQueue(unittest.TestCase):
+    def setUp(self):
+        self.queue = QueueWithPriority()
+        self.queue.push(3, 5)
+        self.queue.push(7, 2)
+        self.queue.push(433, 7)
+        self.queue.push(323, 0)
 
-    def test_sort(self):
-        arr = [5, 4, 6, 1, 2, 3]
-        manager = HeapSort()
-        self.assertEqual(manager.heapsort(arr, "asc"), [1, 2, 3, 4, 5, 6])
+    def test_get(self):
+        self.assertEqual(self.queue.peek(), 433)
 
-    def test_desc_to_asc(self):
-        arr = [6, 5, 4, 3, 2, 1]
-        manager = HeapSort()
-        self.assertEqual(manager.heapsort(arr, "asc"), [1, 2, 3, 4, 5, 6])
+    def test_pull(self):
+        self.assertEqual(self.queue.pop(), 433)
+        self.assertEqual(len(self.queue), 3)
 
-    def test_desc_to_desc(self):
-        arr = [6, 5, 4, 3, 2, 1]
-        manager = HeapSort()
-        self.assertEqual(manager.heapsort(arr, "desc"), [6, 5, 4, 3, 2, 1])
+    def test_insert(self):
+        self.queue.push(124, 44)
+        self.assertEqual(self.queue.peek(), 124)
 
-    def test_asc_to_desc(self):
-        arr = [1, 2, 3, 4, 5, 6]
-        manager = HeapSort()
-        self.assertEqual(manager.heapsort(arr, "desc"), [6, 5, 4, 3, 2, 1])
 
-    def test_asc_to_asc(self):
-        arr = [1, 2, 3, 4, 5, 6]
-        manager = HeapSort()
-        self.assertEqual(manager.heapsort(arr, "asc"), [1, 2, 3, 4, 5, 6])
+if __name__ == '__main__':
+    unittest.main()
