@@ -1,19 +1,29 @@
-def find3Numbers(A, arr_size, search_num):
+def find3Numbers(Array, arr_size, sum):
+
+    Array.sort()
+
     for i in range(0, arr_size - 2):
 
-        for j in range(i + 1, arr_size - 1):
+        left = i + 1
 
-            for k in range(j + 1, arr_size):
-                if A[i] + A[j] + A[k] == search_num:
-                    print("Triplet is", A[i],
-                          ", ", A[j], ", ", A[k])
-                    return True
+        right = arr_size - 1
+        while left < right:
 
-    return 'False'
+            if Array[i] + Array[left] + Array[right] == sum:
+                print("Triplet is", Array[i],
+                      ', ', Array[left], ', ', Array[right])
+                return True
+
+            elif Array[i] + Array[left] + Array[right] < sum:
+                left += 1
+            else:
+                right -= 1
+
+    return False
 
 
-A = list(range(1, 1000))
-search_num = 15
-arr_size = len(A)
-find3Numbers(A, arr_size, search_num)
+Array = list(range(1, 1000))
+sum = 2500
+arr_size = len(Array)
 
+find3Numbers(Array, arr_size, sum)
