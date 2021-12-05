@@ -1,29 +1,44 @@
-def find3Numbers(Array, arr_size, sum):
+class Graph:
 
-    Array.sort()
+    def __init__(self, vertices):
+        self.V = vertices
+        self.graph = []
 
-    for i in range(0, arr_size - 2):
+    def addEdge(self, u, v, w):
+        self.graph.append([u, v, w])
 
-        left = i + 1
+    def printArr(self, dist):
+        print("Vertex Distance from Source")
+        for i in range(self.V):
+            print("{0}\t\t{1}".format(i, dist[i]))
 
-        right = arr_size - 1
-        while left < right:
+    def BellmanFord(self, src):
 
-            if Array[i] + Array[left] + Array[right] == sum:
-                print("Triplet is", Array[i],
-                      ', ', Array[left], ', ', Array[right])
-                return True
+        dist = [float("Inf")] * self.V
+        dist[src] = 0
 
-            elif Array[i] + Array[left] + Array[right] < sum:
-                left += 1
-            else:
-                right -= 1
+        for _ in range(self.V - 1):
+            for u, v, w in self.graph:
+                if dist[u] != float("Inf") and dist[u] + w < dist[v]:
+                    dist[v] = dist[u] + w
 
-    return False
+        for u, v, w in self.graph:
+            if dist[u] != float("Inf") and dist[u] + w < dist[v]:
+                print("Graph contains negative weight cycle")
+                return
+
+        self.printArr(dist)
 
 
-Array = list(range(1, 1000))
-sum = 2500
-arr_size = len(Array)
+g = Graph(5)
+g.addEdge(0, 1, -1)
+g.addEdge(0, 2, 4)
+g.addEdge(1, 2, 3)
+g.addEdge(1, 3, 2)
+g.addEdge(1, 4, 2)
+g.addEdge(3, 2, 5)
+g.addEdge(3, 1, 1)
+g.addEdge(4, 3, -3)
 
-find3Numbers(Array, arr_size, sum)
+
+g.BellmanFord(0)
