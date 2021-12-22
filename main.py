@@ -1,52 +1,38 @@
-from queue import PriorityQueue
+def dfs(graph, max_flow, edge_start, edge_end):
+    visited = [edge_start]
+    paths = {edge_start: []}
+    if edge_start == edge_end:
+        return paths[edge_start]
+    while (visited):
+        u = visited.pop()
+        for ind in range(len(graph)):
+            if (graph[u][ind] - max_flow[u][ind] > 0) and ind not in paths:
+                paths[ind] = paths[u] + [(u, ind)]
+                if ind == edge_end:
+                    return paths[ind]
+                visited.append(ind)
+    return None
 
 
-class Djikstra_Graph:
+def max_flow_and_min_cut(graph, edge_start, edge_end):
+    node = len(graph)
+    max_flow = [[0] * node for i in range(node)]
+    path_flow = dfs(graph, max_flow, edge_start, edge_end)
+    while path_flow != None:
+        flow = min(graph[u][ind] - max_flow[u][ind] for u, ind in path_flow)
+        for u, v in path_flow:
+            max_flow[u][v] += flow
+            max_flow[v][u] -= flow
+        path_flow = dfs(graph, max_flow, edge_start, edge_end)
+    return sum(max_flow[edge_start][i] for i in range(node))
 
-    def __init__(self, amount):
-        self.g = amount
-        self.edges = [[-1 for i in range(amount)] for j in range(amount)]
-        self.visited = []
+graph = [
+    [0, 16, 13, 0, 0, 0],
+    [0, 0, 0, 12, 0, 0],
+    [0, 4, 0, 0, 14, 0],
+    [0, 0, 9, 0, 0, 20],
+    [0, 0, 0, 7, 0, 4],
+    [0, 0, 0, 0, 0, 0]]
 
-    def djikstra(self, start):
-        G = {g: float('inf') for g in range(self.g)}
-
-        G[start] = 0
-
-        queq = PriorityQueue()
-        queq.put((0, start))
-
-        while not queq.empty():
-            (dist, current) = queq.get()
-            self.visited.append(current)
-
-            for neighbor in range(self.g):
-                if self.edges[current][neighbor] != -1:
-                    distance = self.edges[current][neighbor]
-                    if neighbor not in self.visited:
-                        old = G[neighbor]
-                        new = G[current] + distance
-                        if new < old:
-                            queq.put((new, neighbor))
-                            G[neighbor] = new
-        return G
-
-    def add_edge(self, u, g, weight):
-        self.edges[u][g] = weight
-        self.edges[g][u] = weight
-
-
-if __name__ == '__main__':
-
-    el = Djikstra_Graph(5)
-    el.add_edge(0, 1, 2)
-    el.add_edge(0, 3, 1)
-    el.add_edge(1, 2, 8)
-    el.add_edge(1, 3, 3)
-    el.add_edge(1, 4, 10)
-    el.add_edge(2, 4, 9)
-
-    G = el.djikstra(0)
-
-    for vertex in range(len(G)):
-        print("Distance from vertex 0 to vertex", vertex, "is", G[vertex])
+edge_start, edge_end = 0, 5
+print (max_flow_and_min_cut(graph, edge_start, edge_end))
