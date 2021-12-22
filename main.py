@@ -1,44 +1,52 @@
-class Graph:
-
-    def __init__(self, vertices):
-        self.V = vertices
-        self.graph = []
-
-    def addEdge(self, u, v, w):
-        self.graph.append([u, v, w])
-
-    def printArr(self, dist):
-        print("Vertex Distance from Source")
-        for i in range(self.V):
-            print("{0}\t\t{1}".format(i, dist[i]))
-
-    def BellmanFord(self, src):
-
-        dist = [float("Inf")] * self.V
-        dist[src] = 0
-
-        for _ in range(self.V - 1):
-            for u, v, w in self.graph:
-                if dist[u] != float("Inf") and dist[u] + w < dist[v]:
-                    dist[v] = dist[u] + w
-
-        for u, v, w in self.graph:
-            if dist[u] != float("Inf") and dist[u] + w < dist[v]:
-                print("Graph contains negative weight cycle")
-                return
-
-        self.printArr(dist)
+from queue import PriorityQueue
 
 
-g = Graph(5)
-g.addEdge(0, 1, -1)
-g.addEdge(0, 2, 4)
-g.addEdge(1, 2, 3)
-g.addEdge(1, 3, 2)
-g.addEdge(1, 4, 2)
-g.addEdge(3, 2, 5)
-g.addEdge(3, 1, 1)
-g.addEdge(4, 3, -3)
+class Djikstra_Graph:
+
+    def __init__(self, amount):
+        self.g = amount
+        self.edges = [[-1 for i in range(amount)] for j in range(amount)]
+        self.visited = []
+
+    def djikstra(self, start):
+        G = {g: float('inf') for g in range(self.g)}
+
+        G[start] = 0
+
+        queq = PriorityQueue()
+        queq.put((0, start))
+
+        while not queq.empty():
+            (dist, current) = queq.get()
+            self.visited.append(current)
+
+            for neighbor in range(self.g):
+                if self.edges[current][neighbor] != -1:
+                    distance = self.edges[current][neighbor]
+                    if neighbor not in self.visited:
+                        old = G[neighbor]
+                        new = G[current] + distance
+                        if new < old:
+                            queq.put((new, neighbor))
+                            G[neighbor] = new
+        return G
+
+    def add_edge(self, u, g, weight):
+        self.edges[u][g] = weight
+        self.edges[g][u] = weight
 
 
-g.BellmanFord(0)
+if __name__ == '__main__':
+
+    el = Djikstra_Graph(5)
+    el.add_edge(0, 1, 2)
+    el.add_edge(0, 3, 1)
+    el.add_edge(1, 2, 8)
+    el.add_edge(1, 3, 3)
+    el.add_edge(1, 4, 10)
+    el.add_edge(2, 4, 9)
+
+    G = el.djikstra(0)
+
+    for vertex in range(len(G)):
+        print("Distance from vertex 0 to vertex", vertex, "is", G[vertex])
