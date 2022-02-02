@@ -1,36 +1,72 @@
-def dijkstra(graph, src):
-    visited = []
-    distance = {src: 0}
-    node = list(range(len(graph[0])))
-    if src in node:
-        node.remove(src)
-        visited.append(src)
-    else:
-        return None
-    for i in node:
-        distance[i] = graph[src][i]
-    prefer = src
-    while node:
-        _distance = float('inf')
+class Graph:
+
+    def __init__(self, graph):
+        self.graph = graph
+        self.org_graph = [i[:] for i in graph]
+        self.ROW = len(graph)
+        self.COL = len(graph[0])
+
+    def breadth_first_search(self, s, t, parent):
+
+        visited = [False] * (self.ROW)
+
+        queue = []
+        queue.append(s)
+        visited[s] = True
+
+        while queue:
+            u = queue.pop(0)
+
+            for ind, val in enumerate(self.graph[u]):
+                if visited[ind] == False and val > 0:
+                    queue.append(ind)
+                    visited[ind] = True
+                    parent[ind] = u
+        return True if visited[t] else False
+
+    def depth_first_search(self, graph, s, visited):
+        visited[s] = True
+        for i in range(len(graph)):
+            if graph[s][i] > 0 and not visited[i]:
+                self.depth_first_search(graph, i, visited)
+
+    def min_cut(self, source, sink):
+
+        parent = [-1] * self.ROW
+        max_flow = 0
+        while self.breadth_first_search(source, sink, parent):
+            path_flow = float("Inf")
+            s = sink
+            while (s != source):
+                path_flow = min(path_flow, self.graph[parent[s]][s])
+                s = parent[s]
+
+            max_flow += path_flow
+
+            v = sink
+            while (v != source):
+                u = parent[v]
+                self.graph[u][v] -= path_flow
+                self.graph[v][u] += path_flow
+                v = parent[v]
+
+        visited = len(self.graph) * [False]
+        self.depth_first_search(self.graph, s, visited)
+
+        for i in range(self.ROW):
+            for j in range(self.COL):
+                if self.graph[i][j] == 0 and \
+                        self.org_graph[i][j] > 0 and visited[i]:
+                    print(str(i) + " - " + str(j))
 
 
-        for i in visited:
-            for j in node:
-                if graph[i][j] > 0:
-                    if _distance > distance[i] + graph[i][j]:
-                        _distance = distance[j] = distance[i] + graph[i][j]
-                        prefer = j
-        visited.append(prefer)
-        node.remove(prefer)
-    return distance
-
-graph_list = [[0, 2, 1, 4, 5, 1],
-              [1, 0, 4, 2, 3, 4],
-              [2, 1, 0, 1, 2, 4],
-              [3, 5, 2, 0, 3, 3],
-              [2, 4, 3, 4, 0, 1],
-              [3, 4, 7, 3, 1, 0]]
-
-if __name__ == '__main__':
-    distance = dijkstra(graph_list, 0)
-    print(distance)
+graph = [[0, 16, 13, 0, 0, 0],
+         [0, 0, 10, 12, 0, 0],
+         [0, 4, 0, 0, 14, 0],
+         [0, 0, 9, 0, 0, 20],
+         [0, 0, 0, 7, 0, 4],
+         [0, 0, 0, 0, 0, 0]]
+g = Graph(graph)
+source = 0
+sink = 5
+g.min_cut(source, sink)
