@@ -1,41 +1,31 @@
 import unittest
-from main import min_cut
+from main import find_ways_count
 
 
-class Test(unittest.TestCase):
+class FindWaysCountTest(unittest.TestCase):
 
-    def test_given_examples_one(self):
-        graph = [
-            [0, 16, 13, 0, 0, 0],
-            [0, 0, 0, 12, 0, 0],
-            [0, 4, 0, 0, 14, 0],
-            [0, 0, 9, 0, 0, 20],
-            [0, 0, 0, 7, 0, 4],
-            [0, 0, 0, 0, 0, 0]]
+    def test_find_ways_count(self):
+        matrix = [
+            ["a", "a", "a"],
+            ["c", "a", "b"],
+            ["d", "e", "f"]
+        ]
+        output = 5
+        ways_count = find_ways_count(matrix, 3, 3)
+        self.assertEqual(ways_count[0][2]+ways_count[2][2], output)
 
-        edge_start, edge_end = 0, 5
-        self.assertEqual(min_cut(graph, edge_start, edge_end), 23)
+        matrix = [['a', 'b', 'c', 'd', 'e', 'f', 'a', 'g', 'h', 'i']]
+        output = 2
+        ways_count = find_ways_count(matrix, 10, 1)
+        self.assertEqual(ways_count[0][9] + ways_count[0][9], output)
 
-    def test_given_examples_two(self):
-        graph = [
-            [0, 5, 3, 0, 0, 0],
-            [0, 0, 10, 2, 0, 10],
-            [0, 4, 0, 0, 14, 0],
-            [0, 10, 2, 0, 0, 2],
-            [0, 1, 0, 3, 5, 0],
-            [0, 0, 0, 0, 0, 0]]
+        matrix = [['a', 'a', 'a', 'a', 'a', 'a', 'a'],
+                  ['a', 'a', 'a', 'a', 'a', 'a', 'a'],
+                  ['a', 'a', 'a', 'a', 'a', 'a', 'a'],
+                  ['a', 'a', 'a', 'a', 'a', 'a', 'a'],
+                  ['a', 'a', 'a', 'a', 'a', 'a', 'a'],
+                  ['a', 'a', 'a', 'a', 'a', 'a', 'a']]
 
-        edge_start, edge_end = 0, 5
-        self.assertEqual(min_cut(graph, edge_start, edge_end), 8)
-
-    def test_given_examples_three(self):
-        graph = [
-            [0, 1, 13, 0, 7, 0],
-            [0, 8, 0, 0, 0, 10],
-            [0, 0, 0, 19, 0, 4],
-            [0, 0, 2, 0, 2, 0],
-            [0, 5, 0, 0, 15, 0],
-            [0, 0, 0, 0, 0, 0]]
-
-        edge_start, edge_end = 0, 5
-        self.assertEqual(min_cut(graph, edge_start, edge_end), 10)
+        output = 201684
+        ways_count = find_ways_count(matrix, 7, 6)
+        self.assertEqual(ways_count[0][6] + ways_count[5][6], output)
