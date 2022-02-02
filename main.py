@@ -1,16 +1,49 @@
+def KMPSearch(pattern, txt):
+    M = len(pattern)
+    N = len(txt)
 
-from ijones import find_ways_count
+    lps = [0] * M
+    j = 0
+
+    computeLPSArray(pattern, M, lps)
+
+    i = 0
+    while i < N:
+        if pattern[j] == txt[i]:
+            i += 1
+            j += 1
+
+        if j == M:
+            print("Found pattern at index " + str(i - j))
+            j = lps[j - 1]
+
+        elif i < N and pattern[j] != txt[i]:
+            if j != 0:
+                j = lps[j - 1]
+            else:
+                i += 1
 
 
-if __name__ == '__main__':
-    w, h = map(int, input().split(" "))
+def computeLPSArray(pattern, M, lps):
+    len = 0
 
-    matrix = [list(input())[:w] for i in range(h)]
-    ways_count = find_ways_count(matrix, w, h)
+    lps[0]
+    i = 1
 
-    print(ways_count[0][w-1] + ways_count[h-1][w-1])
+    while i < M:
+        if pattern[i] == pattern[len]:
+            len += 1
+            lps[i] = len
+            i += 1
+        else:
+            if len != 0:
+                len = lps[len - 1]
 
-3 3
-aaa
-cab
-def
+            else:
+                lps[i] = 0
+                i += 1
+
+
+txt = "ABABDABACDABABCABAB"
+pattern = "ABABCABAB"
+KMPSearch(pattern, txt)
